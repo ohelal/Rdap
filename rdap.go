@@ -20,21 +20,21 @@
 // Example usage:
 //
 //	client := rdap.NewClient()
-//	
+//
 //	// IP Lookup
 //	ipResult, err := client.LookupIP(context.Background(), "8.8.8.8")
 //	if err != nil {
 //	    log.Fatal(err)
 //	}
 //	fmt.Printf("IP Owner: %s\n", ipResult.Name)
-//	
+//
 //	// ASN Lookup
 //	asnResult, err := client.LookupASN(context.Background(), "15169")
 //	if err != nil {
 //	    log.Fatal(err)
 //	}
 //	fmt.Printf("ASN Name: %s\n", asnResult.Name)
-//	
+//
 //	// Domain Lookup
 //	domainResult, err := client.LookupDomain(context.Background(), "example.com")
 //	if err != nil {

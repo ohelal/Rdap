@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"log"
 	"sync"
+	"time"
 
 	"github.com/Shopify/sarama"
 )
@@ -13,6 +14,7 @@ type Consumer struct {
 	consumer sarama.ConsumerGroup
 	topics   []string
 	handler  MessageHandler
+	cb       *CircuitBreaker
 }
 
 type MessageHandler interface {
@@ -33,6 +35,7 @@ func NewConsumer(brokers []string, groupID string, topics []string, handler Mess
 		consumer: consumer,
 		topics:   topics,
 		handler:  handler,
+		cb:       NewCircuitBreaker(5, 1*time.Minute),
 	}, nil
 }
 
@@ -43,9 +46,21 @@ func (c *Consumer) Start(ctx context.Context) error {
 	go func() {
 		defer wg.Done()
 		for {
-			if err := c.consumer.Consume(ctx, c.topics, &consumerGroupHandler{handler: c.handler}); err != nil {
-				log.Printf("Error from consumer: %v", err)
+			if !c.cb.AllowRequest() {
+				log.Println("Circuit breaker is open, waiting before retry...")
+				time.Sleep(5 * time.Second)
+				continue
 			}
+
+			if err := c.consumer.Consume(ctx, c.topics, &consumerGroupHandler{
+				handler: c.handler,
+				cb:      c.cb,
+			}); err != nil {
+				log.Printf("Error from consumer: %v", err)
+				c.cb.OnFailure()
+				continue
+			}
+
 			if ctx.Err() != nil {
 				return
 			}
@@ -60,9 +75,10 @@ func (c *Consumer) Start(ctx context.Context) error {
 
 type consumerGroupHandler struct {
 	handler MessageHandler
+	cb      *CircuitBreaker
 }
 
-func (h *consumerGroupHandler) Setup(_ sarama.ConsumerGroupSession) error   { return nil }
+func (h *consumerGroupHandler) Setup(_ sarama.ConsumerGroupSession) error { return nil }
 func (h *consumerGroupHandler) Cleanup(_ sarama.ConsumerGroupSession) error { return nil }
 
 func (h *consumerGroupHandler) ConsumeClaim(session sarama.ConsumerGroupSession, claim sarama.ConsumerGroupClaim) error {
@@ -70,15 +86,18 @@ func (h *consumerGroupHandler) ConsumeClaim(session sarama.ConsumerGroupSession,
 		var kafkaMsg Message
 		if err := json.Unmarshal(msg.Value, &kafkaMsg); err != nil {
 			log.Printf("Error unmarshaling message: %v", err)
+			h.cb.OnFailure()
 			continue
 		}
 
 		if err := h.handler.HandleMessage(&kafkaMsg); err != nil {
 			log.Printf("Error handling message: %v", err)
+			h.cb.OnFailure()
 			continue
 		}
 
 		session.MarkMessage(msg, "")
+		h.cb.OnSuccess()
 	}
 	return nil
 }

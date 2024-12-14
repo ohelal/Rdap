@@ -9,4 +9,7 @@ data:
   LOG_LEVEL: "info"
   METRICS_ENABLED: "true"
   REDIS_URL: "redis.rdap.svc.cluster.local:6379"
-  KAFKA_BROKERS: "kafka-0.kafka.rdap.svc.cluster.local:9092,kafka-1.kafka.rdap.svc.cluster.local:9092"
+  KAFKA_BROKERS: "kafka-0.kafka.rdap.svc.cluster.local:9092,kafka-1.kafka.rdap.svc.cluster.local:9092,kafka-2.kafka.rdap.svc.cluster.local:9092"
+  KAFKA_ENABLED: "true"
+  KAFKA_TOPIC: "rdap-events"
+  KAFKA_GROUP_ID: "rdap-consumer"

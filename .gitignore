@@ -4,102 +4,46 @@
 *.dll
 *.so
 *.dylib
-/rdap_server
-/rdap_service
-/server
-bin/
-dist/
+rdap
+server
+minikube*
 
 # Test binary, built with `go test -c`
 *.test
-coverage.txt
-coverage.html
 
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
-*.prof
-*.trace
 
-# Dependency directories
+# Dependency directories (remove the comment below to include it)
 vendor/
-node_modules/
 
 # Go workspace file
 go.work
-go.work.sum
 
 # IDE specific files
-.idea/
-.vscode/
-*.swp
-.project
-.classpath
-.c9/
-*.launch
-.settings/
-*.sublime-workspace
-*.sublime-project
-
-# OS generated files
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
-Desktop.ini
-$RECYCLE.BIN/
-
-# Logs and databases
-*.log
-*.sql
-*.sqlite
-*.db
-logs/
-*.log.*
-
-# Environment variables and secrets
-.env
-.env.local
-.env.*.local
-*.pem
-*.key
-secrets/
-
-# Configuration files
-config/*.json
-!config/example.json
-*.yaml
-!config/example.yaml
-!k8s/**/*.yaml
-
-# Build artifacts and temporary files
-/rdap_service
-/build/
-/dist/
-/tmp/
-*.tmp
-*.bak
+.idea
+.vscode
 *.swp
 *.swo
+*~
 
-# Docker volumes and data
-data/
-redis_data/
-kafka_data/
-volumes/
+# OS specific files
+.DS_Store
+.env
 
-# Development tools
-.air.toml
-.golangci.yml
-coverage/
-benchmarks/
-*.bench
+# Config files
+config/*.json
+config/backup/
+config/rdap-updates.log
 
-# Minikube and Kubernetes related
-minikube
-.minikube/
-*.minikube
-kubeconfig
-.kube/
+# Docker volumes
+.docker/
+
+# Kubernetes
+k8s/monitoring/
+k8s/secrets/
+
+# Temporary files
+*.tmp
+*.bak
+*.log

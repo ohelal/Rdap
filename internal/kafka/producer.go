@@ -2,7 +2,9 @@ package kafka
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
+	"time"
 
 	"github.com/Shopify/sarama"
 )
@@ -10,6 +12,7 @@ import (
 type Producer struct {
 	producer sarama.SyncProducer
 	topic    string
+	cb       *CircuitBreaker
 }
 
 func NewProducer(brokers []string, topic string) (*Producer, error) {
@@ -26,10 +29,15 @@ func NewProducer(brokers []string, topic string) (*Producer, error) {
 	return &Producer{
 		producer: producer,
 		topic:    topic,
+		cb:       NewCircuitBreaker(5, 1*time.Minute),
 	}, nil
 }
 
 func (p *Producer) SendMessage(msg *Message) error {
+	if !p.cb.AllowRequest() {
+		return fmt.Errorf("circuit breaker is open")
+	}
+
 	jsonData, err := json.Marshal(msg)
 	if err != nil {
 		return err
@@ -43,9 +51,11 @@ func (p *Producer) SendMessage(msg *Message) error {
 
 	partition, offset, err := p.producer.SendMessage(message)
 	if err != nil {
+		p.cb.OnFailure()
 		return err
 	}
 
+	p.cb.OnSuccess()
 	log.Printf("Message sent to partition %d at offset %d\n", partition, offset)
 	return nil
 }

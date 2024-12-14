@@ -2,8 +2,10 @@ package ratelimit
 
 import (
 	"context"
-	"github.com/go-redis/redis/v8"
+	"strconv"
 	"time"
+
+	"github.com/go-redis/redis/v8"
 )
 
 type EdgeRateLimiter struct {
@@ -30,7 +32,7 @@ func (rl *EdgeRateLimiter) Allow(ctx context.Context, key string) (bool, error) 
 	windowStart := now - rl.window.Nanoseconds()
 
 	// Remove old requests
-	pipe.ZRemRangeByScore(ctx, key, "0", string(windowStart))
+	pipe.ZRemRangeByScore(ctx, key, "0", strconv.FormatInt(windowStart, 10))
 
 	// Add current request
 	pipe.ZAdd(ctx, key, &redis.Z{

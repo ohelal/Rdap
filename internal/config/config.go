@@ -10,25 +10,26 @@ import (
 
 // Config holds the service configuration
 type Config struct {
-	Server   ServerConfig   `mapstructure:"server"`
-	Redis    RedisConfig    `mapstructure:"redis"`
-	Kafka    KafkaConfig    `mapstructure:"kafka"`
-	Metrics  MetricsConfig  `mapstructure:"metrics"`
-	Logging  LoggingConfig  `mapstructure:"logging"`
-	Security SecurityConfig `mapstructure:"security"`
-	RDAP     RDAPConfig     `mapstructure:"rdap"`
+	Server    ServerConfig    `mapstructure:"server"`
+	Redis     RedisConfig     `mapstructure:"redis"`
+	Kafka     KafkaConfig     `mapstructure:"kafka"`
+	Metrics   MetricsConfig   `mapstructure:"metrics"`
+	Logging   LoggingConfig   `mapstructure:"logging"`
+	Security  SecurityConfig  `mapstructure:"security"`
+	RDAP      RDAPConfig      `mapstructure:"rdap"`
 	RateLimit RateLimitConfig `mapstructure:"rateLimit"`
+	Error     ErrorConfig     `mapstructure:"error"`
 }
 
 // ServerConfig holds HTTP server configuration
 type ServerConfig struct {
-	Port                 string        `mapstructure:"port" default:"8080"`
-	ReadTimeout         time.Duration `mapstructure:"read_timeout" default:"10s"`
-	WriteTimeout        time.Duration `mapstructure:"write_timeout" default:"10s"`
-	MaxConcurrentReqs   int           `mapstructure:"max_concurrent_requests" default:"5000"`
-	EnableCompression   bool          `mapstructure:"enable_compression" default:"true"`
-	EnableRateLimit     bool          `mapstructure:"enable_rate_limit" default:"true"`
-	RateLimitPerMinute  int           `mapstructure:"rate_limit_per_minute" default:"100"`
+	Port               string        `mapstructure:"port" default:"8080"`
+	ReadTimeout        time.Duration `mapstructure:"read_timeout" default:"10s"`
+	WriteTimeout       time.Duration `mapstructure:"write_timeout" default:"10s"`
+	MaxConcurrentReqs  int           `mapstructure:"max_concurrent_requests" default:"5000"`
+	EnableCompression  bool          `mapstructure:"enable_compression" default:"true"`
+	EnableRateLimit    bool          `mapstructure:"enable_rate_limit" default:"true"`
+	RateLimitPerMinute int           `mapstructure:"rate_limit_per_minute" default:"100"`
 }
 
 // RedisConfig holds Redis configuration
@@ -41,10 +42,10 @@ type RedisConfig struct {
 
 // KafkaConfig holds Kafka configuration
 type KafkaConfig struct {
-	Enabled  bool     `mapstructure:"enabled" default:"false"`
-	Brokers  []string `mapstructure:"brokers"`
-	Topic    string   `mapstructure:"topic" default:"rdap-events"`
-	GroupID  string   `mapstructure:"group_id" default:"rdap-service"`
+	Enabled bool     `mapstructure:"enabled" default:"false"`
+	Brokers []string `mapstructure:"brokers"`
+	Topic   string   `mapstructure:"topic" default:"rdap-events"`
+	GroupID string   `mapstructure:"group_id" default:"rdap-service"`
 }
 
 // MetricsConfig holds metrics configuration
@@ -80,17 +81,33 @@ type RateLimitConfig struct {
 	Burst             int `mapstructure:"burst"`
 }
 
+// ErrorConfig holds error handling configuration
+type ErrorConfig struct {
+	RetryableCodes []int         `mapstructure:"retryable_codes" default:"[500,502,503,504]"`
+	MaxErrorAge    time.Duration `mapstructure:"max_error_age" default:"24h"`
+	DetailedErrors bool          `mapstructure:"detailed_errors" default:"false"`
+}
+
+func (ec *ErrorConfig) IsRetryableCode(code int) bool {
+	for _, c := range ec.RetryableCodes {
+		if c == code {
+			return true
+		}
+	}
+	return false
+}
+
 // LoadConfig loads the configuration from environment variables and config file
 func LoadConfig() (*Config, error) {
 	return &Config{
 		Server: ServerConfig{
-			Port:                 "8080",
-			ReadTimeout:         10 * time.Second,
-			WriteTimeout:        10 * time.Second,
-			MaxConcurrentReqs:   5000,
-			EnableCompression:   true,
-			EnableRateLimit:     true,
-			RateLimitPerMinute:  100,
+			Port:               "8080",
+			ReadTimeout:        10 * time.Second,
+			WriteTimeout:       10 * time.Second,
+			MaxConcurrentReqs:  5000,
+			EnableCompression:  true,
+			EnableRateLimit:    true,
+			RateLimitPerMinute: 100,
 		},
 		Redis: RedisConfig{
 			URL:      "redis:6379",
@@ -99,10 +116,10 @@ func LoadConfig() (*Config, error) {
 			TTL:      3600 * time.Second,
 		},
 		Kafka: KafkaConfig{
-			Enabled:  false,
-			Brokers:  []string{},
-			Topic:    "rdap-events",
-			GroupID:  "rdap-service",
+			Enabled: false,
+			Brokers: []string{},
+			Topic:   "rdap-events",
+			GroupID: "rdap-service",
 		},
 		Metrics: MetricsConfig{
 			Enabled: true,
@@ -126,6 +143,11 @@ func LoadConfig() (*Config, error) {
 		RateLimit: RateLimitConfig{
 			RequestsPerSecond: 2000,
 			Burst:             200,
+		},
+		Error: ErrorConfig{
+			RetryableCodes: []int{500, 502, 503, 504},
+			MaxErrorAge:    24 * time.Hour,
+			DetailedErrors: false,
 		},
 	}, nil
 }

@@ -33,8 +33,8 @@ import (
 
 // Default configuration values
 const (
-	defaultRedisURL = "redis:6379"
-	defaultPort    = "8080"
+	defaultRedisURL    = "redis:6379"
+	defaultPort        = "8080"
 	defaultMetricsPort = "9090"
 )
 
@@ -165,8 +165,8 @@ func main() {
 	signal.Notify(quit, os.Interrupt, syscall.SIGTERM)
 
 	// Start server
-	log.Printf("Server starting on port %d...", cfg.Server.Port)
-	if err := app.Listen(fmt.Sprintf(":%d", cfg.Server.Port)); err != nil {
+	log.Printf("Starting server on port %s...", cfg.Server.Port)
+	if err := app.Listen(fmt.Sprintf(":%s", cfg.Server.Port)); err != nil {
 		log.Fatalf("Server failed to start: %v", err)
 	}
 
