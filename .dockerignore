@@ -1,0 +1,58 @@
+# Git
+.git
+.gitignore
+.github
+
+# Docker
+.docker
+docker-compose*.yml
+*.dockerfile
+Dockerfile*
+
+# Development and IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+*.pem
+*.key
+
+# Build and test artifacts
+*.exe
+*.test
+*.prof
+*.out
+coverage.*
+/dist
+/bin
+/build
+
+# Dependencies
+/vendor
+/node_modules
+
+# Logs and data
+*.log
+logs/
+data/
+redis_data/
+kafka_data/
+volumes/
+
+# Configuration and environment
+.env*
+config/*.json
+!config/example.json
+*.yaml
+!config/example.yaml
+
+# Documentation and misc
+README.md
+CHANGELOG.md
+LICENSE
+*.md
+docs/
+examples/
+tests/
+benchmarks/

@@ -1,0 +1,36 @@
+RDAP Service
+
+Copyright 2024 Helal <mohamed@helal.me>
+All rights reserved.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program. If not, see <https://www.gnu.org/licenses/>.
+
+Additional Terms:
+
+1. Attribution Requirements:
+   - You must retain this copyright notice
+   - You must provide a link to the license
+   - You must indicate if changes were made
+
+2. Commercial Use:
+   - Commercial users must contact the author: mohamed@helal.me
+   - Network service providers must make source code available
+   - All modifications must be shared under AGPL
+
+3. Network Use:
+   - If you run this software as a network service
+   - You must provide the complete source code
+   - Including all modifications and additions
+
+For questions or commercial use, contact: mohamed@helal.me

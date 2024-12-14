@@ -1,0 +1,70 @@
+version: '3.8'
+
+services:
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - rdap-server-1
+      - rdap-server-2
+      - rdap-server-3
+      - rdap-server-4
+    networks:
+      - rdap_network
+
+  rdap-server-1:
+    build: .
+    environment:
+      - SERVER_ID=1
+      - REDIS_URL=redis:6379
+    networks:
+      - rdap_network
+
+  rdap-server-2:
+    build: .
+    environment:
+      - SERVER_ID=2
+      - REDIS_URL=redis:6379
+    networks:
+      - rdap_network
+
+  rdap-server-3:
+    build: .
+    environment:
+      - SERVER_ID=3
+      - REDIS_URL=redis:6379
+    networks:
+      - rdap_network
+
+  rdap-server-4:
+    build: .
+    environment:
+      - SERVER_ID=4
+      - REDIS_URL=redis:6379
+    networks:
+      - rdap_network
+
+  redis:
+    image: redis:alpine
+    command: redis-server --maxmemory 2gb --maxmemory-policy allkeys-lru
+    volumes:
+      - redis_data:/data
+    networks:
+      - rdap_network
+
+  cdn:
+    image: cloudflare/cloudflared
+    command: tunnel --url http://nginx:80
+    networks:
+      - rdap_network
+
+networks:
+  rdap_network:
+    driver: bridge
+
+volumes:
+  redis_data:

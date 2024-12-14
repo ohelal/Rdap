@@ -1,0 +1,32 @@
+type ClientOptions struct {
+    BaseURL        string
+    Timeout        time.Duration
+    Headers        map[string]string
+    EnableMetrics  bool
+    RateLimit      int
+    RetryOnLimit   bool
+}
+
+// WithMetrics enables metrics collection
+func WithMetrics(enable bool) Option {
+    return func(c *Client) {
+        c.options.EnableMetrics = enable
+        if enable {
+            c.metrics = NewMetrics()
+        }
+    }
+}
+
+// WithRateLimit sets the rate limit
+func WithRateLimit(requestsPerMinute int) Option {
+    return func(c *Client) {
+        c.options.RateLimit = requestsPerMinute
+    }
+}
+
+// WithHeaders sets custom HTTP headers
+func WithHeaders(headers map[string]string) Option {
+    return func(c *Client) {
+        c.options.Headers = headers
+    }
+}
