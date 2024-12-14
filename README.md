@@ -249,6 +249,29 @@ rdap cache clear
   -v, --verbose       Enable verbose output
 ```
 
+## Kubernetes Deployment
+
+For Kubernetes deployment, you'll need:
+1. Kubernetes cluster (minikube, kind, or cloud provider)
+2. kubectl installed
+3. Helm (optional, for using charts)
+
+To set up minikube:
+```bash
+# Install minikube from official release
+curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+sudo install minikube-linux-amd64 /usr/local/bin/minikube
+
+# Start minikube
+minikube start
+
+# Enable required addons
+minikube addons enable ingress
+minikube addons enable metrics-server
+```
+
+For deployment instructions, see [Kubernetes Deployment Guide](docs/kubernetes.md)
+
 ## Contributing
 1. Fork the repository
 2. Create your feature branch
