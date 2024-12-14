@@ -1,3 +1,7 @@
+// Copyright (C) 2024 Helal <mohamed@helal.me>
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
+// Package handlers provides HTTP request handlers for the RDAP service.
 package handlers
 
 import (
@@ -25,6 +29,7 @@ func NewHandlers(svc *service.RDAPService, metrics *metrics.Metrics, producer *k
 
 // LookupHandler handles RDAP lookup requests
 func (h *Handlers) LookupHandler(c *fiber.Ctx) error {
+	// Handle RDAP lookup requests
 	query := c.Query("q")
 	if query == "" {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
@@ -65,6 +70,7 @@ func (h *Handlers) LookupHandler(c *fiber.Ctx) error {
 
 // IPLookupHandler handles IP lookup requests
 func (h *Handlers) IPLookupHandler(c *fiber.Ctx) error {
+	// Handle IP lookup requests
 	ip := c.Query("q")
 	err := h.svc.HandleIPLookup(c)
 	if err != nil {
@@ -77,6 +83,7 @@ func (h *Handlers) IPLookupHandler(c *fiber.Ctx) error {
 
 // DomainLookupHandler handles domain lookup requests
 func (h *Handlers) DomainLookupHandler(c *fiber.Ctx) error {
+	// Handle domain lookup requests
 	domain := c.Query("q")
 	err := h.svc.HandleDomainLookup(c)
 	if err != nil {
@@ -89,6 +96,7 @@ func (h *Handlers) DomainLookupHandler(c *fiber.Ctx) error {
 
 // ASNLookupHandler handles ASN lookup requests
 func (h *Handlers) ASNLookupHandler(c *fiber.Ctx) error {
+	// Handle ASN lookup requests
 	asn := c.Query("q")
 	err := h.svc.HandleASNLookup(c)
 	if err != nil {
@@ -101,6 +109,7 @@ func (h *Handlers) ASNLookupHandler(c *fiber.Ctx) error {
 
 // HealthHandler handles health check requests
 func (h *Handlers) HealthHandler(c *fiber.Ctx) error {
+	// Handle health check requests
 	return c.JSON(fiber.Map{
 		"status": "ok",
 		"time":   time.Now().UTC().Format(time.RFC3339),
@@ -108,6 +117,7 @@ func (h *Handlers) HealthHandler(c *fiber.Ctx) error {
 }
 
 func (h *Handlers) sendToKafka(queryType, query string, cacheHit bool) {
+	// Send message to Kafka
 	msg := &kafka.Message{
 		Type:      queryType,
 		Query:     query,

@@ -1,3 +1,7 @@
+// Copyright (C) 2024 Helal <mohamed@helal.me>
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
+// Package config provides configuration management for the RDAP service.
 package config
 
 import (
@@ -6,44 +10,112 @@ import (
 
 // Config holds the service configuration
 type Config struct {
-	Server    ServerConfig    `json:"server"`
-	RDAP      RDAPConfig      `json:"rdap"`
-	RateLimit RateLimitConfig `json:"rateLimit"`
-	Logging   LoggingConfig   `json:"logging"`
+	Server   ServerConfig   `mapstructure:"server"`
+	Redis    RedisConfig    `mapstructure:"redis"`
+	Kafka    KafkaConfig    `mapstructure:"kafka"`
+	Metrics  MetricsConfig  `mapstructure:"metrics"`
+	Logging  LoggingConfig  `mapstructure:"logging"`
+	Security SecurityConfig `mapstructure:"security"`
+	RDAP     RDAPConfig     `mapstructure:"rdap"`
+	RateLimit RateLimitConfig `mapstructure:"rateLimit"`
 }
 
+// ServerConfig holds HTTP server configuration
 type ServerConfig struct {
-	Port         int           `json:"port"`
-	ReadTimeout  time.Duration `json:"readTimeout"`
-	WriteTimeout time.Duration `json:"writeTimeout"`
-	IdleTimeout  time.Duration `json:"idleTimeout"`
+	Port                 string        `mapstructure:"port" default:"8080"`
+	ReadTimeout         time.Duration `mapstructure:"read_timeout" default:"10s"`
+	WriteTimeout        time.Duration `mapstructure:"write_timeout" default:"10s"`
+	MaxConcurrentReqs   int           `mapstructure:"max_concurrent_requests" default:"5000"`
+	EnableCompression   bool          `mapstructure:"enable_compression" default:"true"`
+	EnableRateLimit     bool          `mapstructure:"enable_rate_limit" default:"true"`
+	RateLimitPerMinute  int           `mapstructure:"rate_limit_per_minute" default:"100"`
 }
 
-type RDAPConfig struct {
-	BaseURL    string        `json:"baseUrl"`
-	Timeout    time.Duration `json:"timeout"`
-	MaxRetries int           `json:"maxRetries"`
-	RetryDelay time.Duration `json:"retryDelay"`
+// RedisConfig holds Redis configuration
+type RedisConfig struct {
+	URL      string        `mapstructure:"url" default:"redis:6379"`
+	Password string        `mapstructure:"password"`
+	DB       int           `mapstructure:"db" default:"0"`
+	TTL      time.Duration `mapstructure:"ttl" default:"3600s"`
 }
 
-type RateLimitConfig struct {
-	RequestsPerSecond int `json:"requestsPerSecond"`
-	Burst             int `json:"burst"`
+// KafkaConfig holds Kafka configuration
+type KafkaConfig struct {
+	Enabled  bool     `mapstructure:"enabled" default:"false"`
+	Brokers  []string `mapstructure:"brokers"`
+	Topic    string   `mapstructure:"topic" default:"rdap-events"`
+	GroupID  string   `mapstructure:"group_id" default:"rdap-service"`
 }
 
+// MetricsConfig holds metrics configuration
+type MetricsConfig struct {
+	Enabled bool   `mapstructure:"enabled" default:"true"`
+	Port    string `mapstructure:"port" default:"9090"`
+}
+
+// LoggingConfig holds logging configuration
 type LoggingConfig struct {
-	Level  string `json:"level"`
-	Format string `json:"format"`
+	Level  string `mapstructure:"level" default:"info"`
+	Format string `mapstructure:"format" default:"json"`
 }
 
-// LoadConfig loads all configuration files
+// SecurityConfig holds security-related configuration
+type SecurityConfig struct {
+	TLSEnabled bool   `mapstructure:"tls_enabled" default:"false"`
+	CertFile   string `mapstructure:"cert_file"`
+	KeyFile    string `mapstructure:"key_file"`
+}
+
+// RDAPConfig holds RDAP configuration
+type RDAPConfig struct {
+	BaseURL    string        `mapstructure:"baseUrl"`
+	Timeout    time.Duration `mapstructure:"timeout"`
+	MaxRetries int           `mapstructure:"maxRetries"`
+	RetryDelay time.Duration `mapstructure:"retryDelay"`
+}
+
+// RateLimitConfig holds rate limit configuration
+type RateLimitConfig struct {
+	RequestsPerSecond int `mapstructure:"requestsPerSecond"`
+	Burst             int `mapstructure:"burst"`
+}
+
+// LoadConfig loads the configuration from environment variables and config file
 func LoadConfig() (*Config, error) {
 	return &Config{
 		Server: ServerConfig{
-			Port:         8080,
-			ReadTimeout:  10 * time.Second,
-			WriteTimeout: 10 * time.Second,
-			IdleTimeout:  10 * time.Second,
+			Port:                 "8080",
+			ReadTimeout:         10 * time.Second,
+			WriteTimeout:        10 * time.Second,
+			MaxConcurrentReqs:   5000,
+			EnableCompression:   true,
+			EnableRateLimit:     true,
+			RateLimitPerMinute:  100,
+		},
+		Redis: RedisConfig{
+			URL:      "redis:6379",
+			Password: "",
+			DB:       0,
+			TTL:      3600 * time.Second,
+		},
+		Kafka: KafkaConfig{
+			Enabled:  false,
+			Brokers:  []string{},
+			Topic:    "rdap-events",
+			GroupID:  "rdap-service",
+		},
+		Metrics: MetricsConfig{
+			Enabled: true,
+			Port:    "9090",
+		},
+		Logging: LoggingConfig{
+			Level:  "info",
+			Format: "json",
+		},
+		Security: SecurityConfig{
+			TLSEnabled: false,
+			CertFile:   "",
+			KeyFile:    "",
 		},
 		RDAP: RDAPConfig{
 			BaseURL:    "https://rdap.arin.net/registry",
@@ -54,10 +126,6 @@ func LoadConfig() (*Config, error) {
 		RateLimit: RateLimitConfig{
 			RequestsPerSecond: 2000,
 			Burst:             200,
-		},
-		Logging: LoggingConfig{
-			Level:  "info",
-			Format: "json",
 		},
 	}, nil
 }

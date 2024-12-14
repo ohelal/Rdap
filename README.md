@@ -233,6 +233,94 @@ curl http://localhost:8080/domain/google.com
 - `/nameserver`: 100 requests/minute
 - Other endpoints: 50 requests/minute
 
+## Package Documentation
+
+### Available Packages
+
+```go
+github.com/ohelal/rdap              // Main package with client interface
+github.com/ohelal/rdap/cmd/rdap     // CLI tool
+github.com/ohelal/rdap/cmd/server   // RDAP server
+github.com/ohelal/rdap/pkg/rdap     // Public API package
+```
+
+### Using as a Library
+
+```go
+import "github.com/ohelal/rdap/pkg/rdap"
+
+// Create a new client with default configuration
+client := rdap.NewClient()
+
+// Create a client with custom configuration
+client := rdap.NewClient(rdap.Config{
+    BaseURL: "https://rdap.example.com",
+    Timeout: 30 * time.Second,
+    Cache: rdap.CacheConfig{
+        Enabled: true,
+        TTL:     time.Hour,
+    },
+})
+```
+
+### Running the Server
+
+1. Using Docker:
+```bash
+docker run -p 8080:8080 \
+    -e REDIS_URL=redis:6379 \
+    -e KAFKA_BROKERS=kafka:9092 \
+    ohelal/rdap server
+```
+
+2. Using Kubernetes:
+```bash
+kubectl apply -f deployments/k8s/
+```
+
+3. From source:
+```bash
+go run cmd/server/main.go
+```
+
+### Environment Variables
+
+| Category | Variable | Description | Default |
+|----------|----------|-------------|---------|
+| **Server** |
+| | `PORT` | Server port | `8080` |
+| | `MAX_CONCURRENT_REQUESTS` | Max concurrent requests | `5000` |
+| **Redis** |
+| | `REDIS_URL` | Redis connection URL | `redis:6379` |
+| | `REDIS_PASSWORD` | Redis password | `` |
+| | `CACHE_TTL` | Cache TTL in seconds | `3600` |
+| **Kafka** |
+| | `KAFKA_BROKERS` | Kafka brokers (comma-separated) | `` |
+| | `KAFKA_TOPIC` | Kafka topic | `rdap-events` |
+| **Metrics** |
+| | `METRICS_PORT` | Prometheus metrics port | `9090` |
+| **Logging** |
+| | `LOG_LEVEL` | Log level (debug,info,warn,error) | `info` |
+| | `LOG_FORMAT` | Log format (json,text) | `json` |
+
+### API Endpoints
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/ip/:ip` | GET | IP address lookup |
+| `/asn/:asn` | GET | ASN lookup |
+| `/domain/:domain` | GET | Domain lookup |
+| `/health` | GET | Health check |
+| `/metrics` | GET | Prometheus metrics |
+
+### Rate Limits
+
+| Endpoint | Limit |
+|----------|-------|
+| `/ip/*` | 100/min |
+| `/asn/*` | 100/min |
+| `/domain/*` | 100/min |
+
 ## Configuration
 
 ### Environment Variables

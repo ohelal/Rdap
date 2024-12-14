@@ -1,3 +1,7 @@
+// Copyright (C) 2024 Helal <mohamed@helal.me>
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
+// Command server runs the RDAP service with Redis caching and Kafka integration.
 package main
 
 import (
@@ -27,6 +31,13 @@ import (
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
+// Default configuration values
+const (
+	defaultRedisURL = "redis:6379"
+	defaultPort    = "8080"
+	defaultMetricsPort = "9090"
+)
+
 func main() {
 	// Create a context that we'll use to cancel goroutines on shutdown
 	ctx, cancel := context.WithCancel(context.Background())
@@ -41,10 +52,10 @@ func main() {
 	// Initialize metrics collector
 	metricsCollector := metrics.NewMetrics()
 
-	// Initialize Redis client
+	// Initialize Redis client with fallback to default
 	redisURL := os.Getenv("REDIS_URL")
 	if redisURL == "" {
-		redisURL = "redis:6379"
+		redisURL = defaultRedisURL
 	}
 
 	redisClient := redis.NewClient(&redis.Options{
