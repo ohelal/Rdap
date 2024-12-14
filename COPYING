@@ -1,6 +1,6 @@
-RDAP Service
+RDAP Service and CLI Tool
 
-Copyright 2024 Helal <mohamed@helal.me>
+Copyright (C) 2024 Helal <mohamed@helal.me>
 All rights reserved.
 
 This program is free software: you can redistribute it and/or modify
@@ -16,21 +16,31 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-Additional Terms:
+Additional Terms (per Section 7 of AGPLv3):
 
 1. Attribution Requirements:
-   - You must retain this copyright notice
-   - You must provide a link to the license
-   - You must indicate if changes were made
+   - You must retain this copyright notice in all copies of the software
+   - You must provide a prominent link to the original repository
+   - You must clearly indicate any modifications made to the software
+   - You must preserve all license notices and author attributions
 
 2. Commercial Use:
-   - Commercial users must contact the author: mohamed@helal.me
-   - Network service providers must make source code available
-   - All modifications must be shared under AGPL
+   - Commercial use requires explicit written permission from the author
+   - Contact mohamed@helal.me for commercial licensing inquiries
+   - Network service providers must make the complete source code available
+   - All modifications must be shared under the same AGPL-3.0 license
 
-3. Network Use:
-   - If you run this software as a network service
-   - You must provide the complete source code
-   - Including all modifications and additions
+3. Network Use (as per AGPL Section 13):
+   - If you run this software as a network service or modify it
+   - You must provide access to the complete corresponding source code
+   - This includes all modifications and additions you've made
+   - The source code must be made available to all network users
 
-For questions or commercial use, contact: mohamed@helal.me
+4. Disclaimer:
+   - This software is provided "as is" without warranty of any kind
+   - The author is not liable for any damages arising from its use
+   - Users are responsible for compliance with applicable laws
+
+For questions, commercial licensing, or permissions:
+Contact: mohamed@helal.me
+Repository: https://github.com/ohelal/rdap

@@ -298,7 +298,7 @@ Copyright 2024 Helal <mohamed@helal.me>
 All rights reserved.
 
 ### License Terms
-This project is licensed under the GNU Affero General Public License v3 (AGPL-3.0).
+This project is licensed under the GNU Affero General Public License v3 (AGPL-3.0) with additional terms.
 
 ✅ **Free to Use For**:
 - Personal projects
@@ -307,13 +307,17 @@ This project is licensed under the GNU Affero General Public License v3 (AGPL-3.
 - Educational purposes
 - Research and development
 
-⚠️ **Commercial Use**:
-- Must contact author first: mohamed@helal.me
-- Must keep source code open
-- Must share modifications
-- Must provide source code to network users
+⚠️ **Commercial Use Requirements**:
+- Requires explicit written permission from the author
+- Contact mohamed@helal.me for licensing
+- Must comply with AGPL-3.0 requirements
+- Must make source code available to network users
+- Must share all modifications under AGPL-3.0
+- Must maintain all copyright notices and attributions
 
-See the [LICENSE](LICENSE) file for full terms.
+For complete terms, see:
+- [LICENSE](LICENSE) - Full AGPL-3.0 license text
+- [COPYING](COPYING) - Additional terms and conditions
 
 ## Documentation
 - [Contributing Guide](CONTRIBUTING.md)
