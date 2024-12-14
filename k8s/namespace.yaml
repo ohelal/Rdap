@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: rdap
+  labels:
+    name: rdap
+    environment: production
+
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: rdap-service
+  namespace: rdap
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: rdap-service-role
+  namespace: rdap
+rules:
+  - apiGroups: [""]
+    resources: ["configmaps", "secrets"]
+    verbs: ["get", "list", "watch"]
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: rdap-service-binding
+  namespace: rdap
+subjects:
+- kind: ServiceAccount
+  name: rdap-service
+  namespace: rdap
+roleRef:
+  kind: Role
+  name: rdap-service-role
+  apiGroup: rbac.authorization.k8s.io

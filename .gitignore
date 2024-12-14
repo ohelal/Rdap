@@ -72,6 +72,7 @@ config/*.json
 !config/example.json
 *.yaml
 !config/example.yaml
+!k8s/**/*.yaml
 
 # Build artifacts and temporary files
 /rdap_service
