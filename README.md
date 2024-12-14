@@ -6,7 +6,7 @@
 [![Go Version](https://img.shields.io/github/go-mod/go-version/ohelal/rdap)](https://go.dev/)
 [![Release](https://img.shields.io/github/v/release/ohelal/rdap)](https://github.com/ohelal/rdap/releases)
 [![Build Status](https://github.com/ohelal/rdap/workflows/build/badge.svg)](https://github.com/ohelal/rdap/actions)
-[![Coverage](https://img.shields.io/codecov/c/github/ohelal/rdap)](https://codecov.io/gh/ohelal/rdap)
+[![codecov](https://codecov.io/gh/ohelal/rdap/branch/main/graph/badge.svg)](https://codecov.io/gh/ohelal/rdap)
 
 A high-performance Registration Data Access Protocol (RDAP) service and command-line tool implemented in Go. This project provides fast and reliable lookups for IP addresses, ASNs, and domain names with built-in distributed caching, message queuing, and scalable architecture support.
 
