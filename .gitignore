@@ -95,3 +95,10 @@ volumes/
 coverage/
 benchmarks/
 *.bench
+
+# Minikube and Kubernetes related
+minikube
+.minikube/
+*.minikube
+kubeconfig
+.kube/
