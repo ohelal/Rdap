@@ -6,10 +6,10 @@ import (
 )
 
 type FastCache struct {
-	cache       *fastcache.Cache
-	hits        uint64
-	misses      uint64
-	maxBytes    int
+	cache    *fastcache.Cache
+	hits     uint64
+	misses   uint64
+	maxBytes int
 }
 
 func NewFastCache() *FastCache {
@@ -31,4 +31,4 @@ func (c *FastCache) Get(key []byte) ([]byte, bool) {
 
 func (c *FastCache) Set(key, value []byte) {
 	c.cache.Set(key, value)
-} 
+}

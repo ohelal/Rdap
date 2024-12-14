@@ -2,13 +2,13 @@ package db
 
 import (
 	"database/sql"
-	"time"
 	_ "github.com/lib/pq"
+	"time"
 )
 
 type DBPool struct {
-	master *sql.DB
-	slaves []*sql.DB
+	master  *sql.DB
+	slaves  []*sql.DB
 	current int
 }
 

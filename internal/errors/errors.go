@@ -67,27 +67,27 @@ func (c ErrorCategory) String() string {
 
 // Error represents a service error with enhanced metadata
 type Error struct {
-	Code              int           `json:"code"`
-	Message           string        `json:"message"`
-	Severity         ErrorSeverity `json:"severity"`
-	Category         ErrorCategory `json:"category"`
-	Timestamp        time.Time     `json:"timestamp"`
-	Retryable        bool          `json:"retryable"`
-	Context          interface{}   `json:"context,omitempty"`
-	TraceID          string        `json:"trace_id"`
-	Source           string        `json:"source"`
-	RecoverySuggestion string      `json:"recovery_suggestion,omitempty"`
-	Documentation    string        `json:"documentation_url,omitempty"`
-	RelatedErrors    []string      `json:"related_errors,omitempty"`
-	Err             error         `json:"-"`
+	Code               int           `json:"code"`
+	Message            string        `json:"message"`
+	Severity           ErrorSeverity `json:"severity"`
+	Category           ErrorCategory `json:"category"`
+	Timestamp          time.Time     `json:"timestamp"`
+	Retryable          bool          `json:"retryable"`
+	Context            interface{}   `json:"context,omitempty"`
+	TraceID            string        `json:"trace_id"`
+	Source             string        `json:"source"`
+	RecoverySuggestion string        `json:"recovery_suggestion,omitempty"`
+	Documentation      string        `json:"documentation_url,omitempty"`
+	RelatedErrors      []string      `json:"related_errors,omitempty"`
+	Err                error         `json:"-"`
 }
 
 func (e *Error) Error() string {
 	if e.Err != nil {
-		return fmt.Sprintf("[%d] %s: %v (Severity: %s, Category: %s)", 
+		return fmt.Sprintf("[%d] %s: %v (Severity: %s, Category: %s)",
 			e.Code, e.Message, e.Err, e.Severity.String(), e.Category.String())
 	}
-	return fmt.Sprintf("[%d] %s (Severity: %s, Category: %s)", 
+	return fmt.Sprintf("[%d] %s (Severity: %s, Category: %s)",
 		e.Code, e.Message, e.Severity.String(), e.Category.String())
 }
 

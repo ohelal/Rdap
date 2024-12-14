@@ -20,9 +20,9 @@ type InFlightRequest struct {
 }
 
 type RequestCoalescer struct {
-	mu           sync.RWMutex
-	inFlight     map[RequestKey]*InFlightRequest
-	maxWaitTime  time.Duration
+	mu          sync.RWMutex
+	inFlight    map[RequestKey]*InFlightRequest
+	maxWaitTime time.Duration
 }
 
 func NewRequestCoalescer(maxWaitTime time.Duration) *RequestCoalescer {
@@ -49,7 +49,7 @@ func (rc *RequestCoalescer) Execute(ctx context.Context, key RequestKey, fn func
 	inFlight := &InFlightRequest{
 		Done: make(chan struct{}),
 	}
-	
+
 	rc.mu.Lock()
 	rc.inFlight[key] = inFlight
 	rc.mu.Unlock()

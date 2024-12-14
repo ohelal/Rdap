@@ -55,18 +55,18 @@ func (cm *CDNManager) PurgeURL(url string) error {
 	if err != nil {
 		return err
 	}
-	
+
 	req.Header = cm.config.Headers
-	
+
 	resp, err := cm.client.Do(req)
 	if err != nil {
 		return err
 	}
 	defer resp.Body.Close()
-	
+
 	if resp.StatusCode != http.StatusOK {
 		return fmt.Errorf("failed to purge CDN cache: %d", resp.StatusCode)
 	}
-	
+
 	return nil
 }

@@ -5,10 +5,10 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/ohelal/rdap/internal/config"
 	"io/ioutil"
-	"net/http"
-	"strings"
-	"strconv"
 	"net"
+	"net/http"
+	"strconv"
+	"strings"
 	"sync"
 )
 
@@ -46,7 +46,7 @@ func NewRDAPService(dnsConfig, ipConfig, asnConfig *RDAPBootstrapConfig, service
 func (s *RDAPService) findRDAPServerForASN(asn int64) string {
 	s.mu.Lock()
 	defer s.mu.Unlock()
-	
+
 	for _, service := range s.ASNConfig.Services {
 		if len(service) >= 2 {
 			ranges, ok := service[0].([]interface{})
@@ -57,7 +57,7 @@ func (s *RDAPService) findRDAPServerForASN(asn int64) string {
 			if !ok || len(servers) == 0 {
 				continue
 			}
-			
+
 			for _, r := range ranges {
 				asnRange, ok := r.(string)
 				if !ok {
@@ -83,7 +83,7 @@ func (s *RDAPService) findRDAPServerForASN(asn int64) string {
 func (s *RDAPService) findRDAPServerForIP(ipStr string) string {
 	s.mu.Lock()
 	defer s.mu.Unlock()
-	
+
 	ip := net.ParseIP(ipStr)
 	if ip == nil {
 		return ""
@@ -99,7 +99,7 @@ func (s *RDAPService) findRDAPServerForIP(ipStr string) string {
 			if !ok || len(servers) == 0 {
 				continue
 			}
-			
+
 			for _, c := range cidrs {
 				cidr, ok := c.(string)
 				if !ok {
@@ -121,7 +121,7 @@ func (s *RDAPService) findRDAPServerForIP(ipStr string) string {
 func (s *RDAPService) findRDAPServerForTLD(tld string) string {
 	s.mu.Lock()
 	defer s.mu.Unlock()
-	
+
 	tld = strings.ToLower(tld)
 	for _, service := range s.DNSConfig.Services {
 		if len(service) >= 2 {
@@ -133,7 +133,7 @@ func (s *RDAPService) findRDAPServerForTLD(tld string) string {
 			if !ok || len(servers) == 0 {
 				continue
 			}
-			
+
 			for _, d := range domains {
 				domain, ok := d.(string)
 				if !ok {
@@ -155,8 +155,8 @@ func (s *RDAPService) forwardRequest(c *fiber.Ctx, url string) error {
 	resp, err := s.client.Get(url)
 	if err != nil {
 		return c.Status(500).JSON(fiber.Map{
-			"errorCode": 500,
-			"title": "RDAP Server Error",
+			"errorCode":   500,
+			"title":       "RDAP Server Error",
 			"description": []string{err.Error()},
 		})
 	}
@@ -165,8 +165,8 @@ func (s *RDAPService) forwardRequest(c *fiber.Ctx, url string) error {
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return c.Status(500).JSON(fiber.Map{
-			"errorCode": 500,
-			"title": "Response Error",
+			"errorCode":   500,
+			"title":       "Response Error",
 			"description": []string{err.Error()},
 		})
 	}
@@ -181,8 +181,8 @@ func (s *RDAPService) HandleIPLookup(c *fiber.Ctx) error {
 	rdapServer := s.findRDAPServerForIP(ip)
 	if rdapServer == "" {
 		return c.Status(404).JSON(fiber.Map{
-			"errorCode": 404,
-			"title": "IP Not Found",
+			"errorCode":   404,
+			"title":       "IP Not Found",
 			"description": []string{"No RDAP server found for IP: " + ip},
 		})
 	}
@@ -196,18 +196,18 @@ func (s *RDAPService) HandleDomainLookup(c *fiber.Ctx) error {
 	parts := strings.Split(domain, ".")
 	if len(parts) < 2 {
 		return c.Status(400).JSON(fiber.Map{
-			"errorCode": 400,
-			"title": "Invalid Domain",
+			"errorCode":   400,
+			"title":       "Invalid Domain",
 			"description": []string{"Domain must include TLD"},
 		})
 	}
-	
+
 	tld := parts[len(parts)-1]
 	rdapServer := s.findRDAPServerForTLD(tld)
 	if rdapServer == "" {
 		return c.Status(404).JSON(fiber.Map{
-			"errorCode": 404,
-			"title": "TLD Not Found",
+			"errorCode":   404,
+			"title":       "TLD Not Found",
 			"description": []string{"No RDAP server found for TLD: " + tld},
 		})
 	}
@@ -215,7 +215,7 @@ func (s *RDAPService) HandleDomainLookup(c *fiber.Ctx) error {
 	if !strings.HasSuffix(rdapServer, "/") {
 		rdapServer += "/"
 	}
-	
+
 	return s.forwardRequest(c, rdapServer+"domain/"+domain)
 }
 
@@ -225,8 +225,8 @@ func (s *RDAPService) HandleASNLookup(c *fiber.Ctx) error {
 	asn, err := strconv.ParseInt(asnStr, 10, 64)
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
-			"errorCode": 400,
-			"title": "Invalid ASN",
+			"errorCode":   400,
+			"title":       "Invalid ASN",
 			"description": []string{"Invalid ASN format"},
 		})
 	}
@@ -234,8 +234,8 @@ func (s *RDAPService) HandleASNLookup(c *fiber.Ctx) error {
 	rdapServer := s.findRDAPServerForASN(asn)
 	if rdapServer == "" {
 		return c.Status(404).JSON(fiber.Map{
-			"errorCode": 404,
-			"title": "ASN Not Found",
+			"errorCode":   404,
+			"title":       "ASN Not Found",
 			"description": []string{"No RDAP server found for ASN: " + asnStr},
 		})
 	}
@@ -247,4 +247,4 @@ func (s *RDAPService) HandleASNLookup(c *fiber.Ctx) error {
 func (s *RDAPService) ReloadConfigs() error {
 	// TODO: Implement config reloading logic
 	return nil
-} 
+}

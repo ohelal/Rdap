@@ -41,4 +41,4 @@ func (ecb *ErrorCircuitBreaker) GetBreaker(category ErrorCategory) *gobreaker.Ci
 
 	ecb.breakers[category] = gobreaker.NewCircuitBreaker(settings)
 	return ecb.breakers[category]
-} 
+}

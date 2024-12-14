@@ -10,13 +10,12 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/go-redis/redis/v8"
+	"github.com/gofiber/adaptor/v2"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/compress"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/fiber/v2/middleware/recover"
-	"github.com/gofiber/adaptor/v2"
-	"github.com/prometheus/client_golang/prometheus/promhttp"
-	"github.com/go-redis/redis/v8"
 	"github.com/ohelal/rdap/internal/cache"
 	"github.com/ohelal/rdap/internal/config"
 	"github.com/ohelal/rdap/internal/errors"
@@ -25,6 +24,7 @@ import (
 	"github.com/ohelal/rdap/internal/metrics"
 	"github.com/ohelal/rdap/internal/middleware"
 	"github.com/ohelal/rdap/internal/service"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 func main() {
@@ -48,13 +48,13 @@ func main() {
 	}
 
 	redisClient := redis.NewClient(&redis.Options{
-		Addr: redisURL,
-		DB: 0,
-		PoolSize: 50,
+		Addr:         redisURL,
+		DB:           0,
+		PoolSize:     50,
 		MinIdleConns: 10,
-		MaxRetries: 3,
-		DialTimeout: 5 * time.Second,
-		ReadTimeout: 3 * time.Second,
+		MaxRetries:   3,
+		DialTimeout:  5 * time.Second,
+		ReadTimeout:  3 * time.Second,
 		WriteTimeout: 3 * time.Second,
 	})
 	defer redisClient.Close()
@@ -92,12 +92,12 @@ func main() {
 	// Initialize cache
 	cacheConfig := &cache.CacheConfig{
 		MaxLocalSize: 1024 * 1024 * 1024, // 1GB
-		LocalTTL:    time.Hour,
-		EnableRedis: true,
-		RedisURL:    redisURL,
-		RedisTTL:    time.Hour,
+		LocalTTL:     time.Hour,
+		EnableRedis:  true,
+		RedisURL:     redisURL,
+		RedisTTL:     time.Hour,
 	}
-	
+
 	cacheManager, err := cache.NewCacheManager(cacheConfig)
 	if err != nil {
 		log.Fatalf("Failed to initialize cache: %v", err)
@@ -126,9 +126,9 @@ func main() {
 
 	// Initialize Fiber app with logging
 	log.Println("Starting RDAP service...")
-	
+
 	app := fiber.New(fiber.Config{
-		ErrorHandler: errors.HandleError,
+		ErrorHandler:          errors.HandleError,
 		DisableStartupMessage: false,
 	})
 

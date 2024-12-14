@@ -34,4 +34,4 @@ var (
 
 func trackErrorMetrics(err *Error) {
 	errorCounter.WithLabelValues(err.Category.String(), err.Severity.String()).Inc()
-} 
+}

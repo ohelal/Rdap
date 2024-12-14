@@ -39,4 +39,4 @@ func (bus *ErrorEventBus) Publish(ctx context.Context, err *Error) {
 			go handler.HandleError(ctx, err)
 		}
 	}
-} 
+}

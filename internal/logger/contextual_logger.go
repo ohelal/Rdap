@@ -22,4 +22,4 @@ func (cl *ContextualLogger) WithContext(ctx context.Context) *zerolog.Event {
 		event.Str("user_id", userID)
 	}
 	return event
-} 
+}

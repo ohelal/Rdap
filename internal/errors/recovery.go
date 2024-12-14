@@ -41,4 +41,4 @@ func (rs *RetryStrategy) Recover(ctx context.Context, err *Error) error {
 	}
 
 	return err
-} 
+}

@@ -11,7 +11,7 @@ import (
 
 var (
 	ErrPoolExhausted = errors.New("connection pool exhausted")
-	idCounter uint64
+	idCounter        uint64
 )
 
 func generateID() uint64 {
@@ -50,7 +50,7 @@ func (p *ConnectionPool) Acquire(ctx context.Context) (*Connection, error) {
 		// Create new connection if pool not full
 		p.mu.Lock()
 		defer p.mu.Unlock()
-		
+
 		if len(p.connections) < p.maxSize {
 			conn := &Connection{
 				ID:        fmt.Sprintf("%d", generateID()),
@@ -61,4 +61,4 @@ func (p *ConnectionPool) Acquire(ctx context.Context) (*Connection, error) {
 		}
 		return nil, ErrPoolExhausted
 	}
-} 
+}

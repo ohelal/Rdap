@@ -139,13 +139,3 @@ func formatJSON(data interface{}, pretty bool) string {
 	}
 	return string(bytes)
 }
-
-func getStringSlice(data []interface{}) []string {
-	var strSlice []string
-	for _, s := range data {
-		if str, ok := s.(string); ok {
-			strSlice = append(strSlice, str)
-		}
-	}
-	return strSlice
-}

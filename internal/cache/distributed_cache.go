@@ -4,10 +4,10 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"time"
+	"github.com/go-redis/redis/v8"
 	"sync"
 	"sync/atomic"
-	"github.com/go-redis/redis/v8"
+	"time"
 )
 
 // DistributedCache represents a distributed cache using Redis
@@ -44,11 +44,11 @@ func NewDistributedCache(config *CacheConfig) (*DistributedCache, error) {
 		DialTimeout:        5 * time.Second,
 		ReadTimeout:        3 * time.Second,
 		WriteTimeout:       3 * time.Second,
-		PoolSize:          50,
-		MinIdleConns:      10,
-		MaxConnAge:        30 * time.Minute,
-		PoolTimeout:       4 * time.Second,
-		IdleTimeout:       5 * time.Minute,
+		PoolSize:           50,
+		MinIdleConns:       10,
+		MaxConnAge:         30 * time.Minute,
+		PoolTimeout:        4 * time.Second,
+		IdleTimeout:        5 * time.Minute,
 		IdleCheckFrequency: 1 * time.Minute,
 	}
 
@@ -72,7 +72,7 @@ func NewDistributedCache(config *CacheConfig) (*DistributedCache, error) {
 func (c *DistributedCache) Get(key string) (interface{}, bool) {
 	start := time.Now()
 	ctx := context.Background()
-	
+
 	val, err := c.client.Get(ctx, key).Result()
 	if err != nil {
 		if err == redis.Nil {
@@ -110,7 +110,7 @@ func (c *DistributedCache) Set(key string, value interface{}) error {
 		if err == nil {
 			return nil
 		}
-		
+
 		if i < maxRetries-1 {
 			time.Sleep(time.Duration(i+1) * 100 * time.Millisecond)
 		}

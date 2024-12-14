@@ -99,6 +99,52 @@ A high-performance Registration Data Access Protocol (RDAP) service and command-
 
 ## Installation
 
+### Using as a Library
+```bash
+go get github.com/ohelal/rdap@latest
+```
+
+### Using the CLI Tool
+```bash
+go install github.com/ohelal/rdap/cmd/rdap@latest
+```
+
+### Library Usage Example
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "github.com/ohelal/rdap"
+)
+
+func main() {
+    client := rdap.NewClient()
+    
+    // IP Lookup
+    ipResult, err := client.LookupIP(context.Background(), "8.8.8.8")
+    if err != nil {
+        panic(err)
+    }
+    fmt.Printf("IP Owner: %s\n", ipResult.Name)
+    
+    // ASN Lookup
+    asnResult, err := client.LookupASN(context.Background(), "15169")
+    if err != nil {
+        panic(err)
+    }
+    fmt.Printf("ASN Name: %s\n", asnResult.Name)
+    
+    // Domain Lookup
+    domainResult, err := client.LookupDomain(context.Background(), "example.com")
+    if err != nil {
+        panic(err)
+    }
+    fmt.Printf("Domain Status: %v\n", domainResult.Status)
+}
+```
+
 ### Prerequisites
 - Docker Engine 20.10+
 - Docker Compose v2+
@@ -187,13 +233,44 @@ curl http://localhost:8080/domain/google.com
 - `/nameserver`: 100 requests/minute
 - Other endpoints: 50 requests/minute
 
-### Configuration
-Key configuration options (via environment variables or .env file):
-- `REDIS_URL`: Redis connection string (default: redis:6379)
-- `CACHE_TTL`: Cache duration in seconds (default: 3600)
-- `MAX_CONCURRENT_REQUESTS`: Maximum concurrent requests (default: 5000)
-- `LOG_LEVEL`: Logging level (default: info)
-- `GOMAXPROCS`: Number of processors to use (default: 2)
+## Configuration
+
+### Environment Variables
+
+| Variable | Description | Default | Required |
+|----------|-------------|---------|----------|
+| `REDIS_URL` | Redis connection string | `redis:6379` | Yes |
+| `CACHE_TTL` | Cache duration in seconds | `3600` | No |
+| `MAX_CONCURRENT_REQUESTS` | Maximum concurrent requests | `5000` | No |
+| `LOG_LEVEL` | Logging level (debug, info, warn, error) | `info` | No |
+| `KAFKA_BROKERS` | Comma-separated list of Kafka brokers | | No |
+| `KAFKA_TOPIC` | Kafka topic for event streaming | | No |
+| `METRICS_PORT` | Port for Prometheus metrics | `9090` | No |
+| `HEALTH_CHECK_PORT` | Port for health checks | `8081` | No |
+| `TLS_CERT_FILE` | Path to TLS certificate file | | No |
+| `TLS_KEY_FILE` | Path to TLS key file | | No |
+
+### Configuration File
+You can also use a configuration file. Create `config.yaml`:
+
+```yaml
+redis:
+  url: redis:6379
+  ttl: 3600
+kafka:
+  brokers:
+    - kafka-1:9092
+    - kafka-2:9092
+  topic: rdap-events
+server:
+  port: 8080
+  metrics_port: 9090
+  health_check_port: 8081
+  max_concurrent_requests: 5000
+logging:
+  level: info
+  format: json
+```
 
 ## CLI Usage
 

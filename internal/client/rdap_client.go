@@ -13,9 +13,9 @@ import (
 
 const (
 	// IANA RDAP Bootstrap Service URLs
-	ianaIPBootstrap    = "https://data.iana.org/rdap/ipv4.json"
-	ianaASNBootstrap   = "https://data.iana.org/rdap/asn.json"
-	ianaDNSBootstrap   = "https://data.iana.org/rdap/dns.json"
+	ianaIPBootstrap  = "https://data.iana.org/rdap/ipv4.json"
+	ianaASNBootstrap = "https://data.iana.org/rdap/asn.json"
+	ianaDNSBootstrap = "https://data.iana.org/rdap/dns.json"
 )
 
 type RDAPClient struct {

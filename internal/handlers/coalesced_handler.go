@@ -10,9 +10,9 @@ import (
 
 // CoalescedHandler handles coalesced requests
 type CoalescedHandler struct {
-	cache      *cache.CacheManager
-	coalescer  *coalescing.RequestCoalescer
-	cdnConfig  *cdn.CDNConfig
+	cache     *cache.CacheManager
+	coalescer *coalescing.RequestCoalescer
+	cdnConfig *cdn.CDNConfig
 }
 
 // NewCoalescedHandler creates a new coalesced handler

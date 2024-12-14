@@ -19,9 +19,9 @@
 package main
 
 import (
-    "github.com/ohelal/rdap/cmd/rdap/cmd"
+	"github.com/ohelal/rdap/cmd/rdap/cmd"
 )
 
 func main() {
-    cmd.Execute()
+	cmd.Execute()
 }

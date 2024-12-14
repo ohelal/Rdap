@@ -14,9 +14,9 @@ func ErrorHandler(log *logger.ContextualLogger) fiber.Handler {
 				log.WithContext(c.Context()).Err(err).
 					Str("trace_id", e.TraceID).
 					Msg(e.Message)
-				
+
 				return c.Status(e.Code).JSON(fiber.Map{
-					"error": e.Message,
+					"error":    e.Message,
 					"trace_id": e.TraceID,
 				})
 			}

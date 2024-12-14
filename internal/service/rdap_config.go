@@ -12,7 +12,7 @@ type RDAPBootstrapConfig struct {
 	Description string          `json:"description"`
 	Publication string          `json:"publication"`
 	Services    [][]interface{} `json:"services"`
-	Version     string         `json:"version,omitempty"`
+	Version     string          `json:"version,omitempty"`
 }
 
 // LoadBootstrapConfig loads an RDAP bootstrap configuration from a file

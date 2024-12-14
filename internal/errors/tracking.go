@@ -38,4 +38,4 @@ func (t *ErrorTracker) TrackError(err *Error) {
 			t.stats[err.Category].Sources[err.Source] = 1
 		}
 	}
-} 
+}

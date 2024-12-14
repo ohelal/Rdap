@@ -151,7 +151,7 @@ func (c *Client) QueryASN(ctx context.Context, asn string) (map[string]interface
 
 	// Remove "AS" prefix if present and convert to string
 	asn = strings.TrimPrefix(strings.ToUpper(asn), "AS")
-	
+
 	url := fmt.Sprintf("%s/autnum/%s", c.baseURL, asn)
 	return c.makeRequest(ctx, url)
 }
@@ -210,41 +210,41 @@ func (c *Client) makeRequest(ctx context.Context, url string) (map[string]interf
 
 // ValidateDomain checks if a string is a valid domain name
 func (c *Client) ValidateDomain(domain string) error {
-    if domain == "" {
-        return fmt.Errorf("domain name cannot be empty")
-    }
-    if strings.Contains(domain, " ") {
-        return fmt.Errorf("domain name cannot contain spaces")
-    }
-    if !strings.Contains(domain, ".") {
-        return fmt.Errorf("domain name must contain at least one dot")
-    }
-    return nil
+	if domain == "" {
+		return fmt.Errorf("domain name cannot be empty")
+	}
+	if strings.Contains(domain, " ") {
+		return fmt.Errorf("domain name cannot contain spaces")
+	}
+	if !strings.Contains(domain, ".") {
+		return fmt.Errorf("domain name must contain at least one dot")
+	}
+	return nil
 }
 
 // ValidateIP checks if a string is a valid IP address
 func (c *Client) ValidateIP(ip string) error {
-    if ip == "" {
-        return fmt.Errorf("IP address cannot be empty")
-    }
-    if strings.Contains(ip, " ") {
-        return fmt.Errorf("IP address cannot contain spaces")
-    }
-    // Basic format check - could be enhanced with net.ParseIP
-    parts := strings.Split(ip, ".")
-    if len(parts) != 4 {
-        return fmt.Errorf("invalid IPv4 address format")
-    }
-    return nil
+	if ip == "" {
+		return fmt.Errorf("IP address cannot be empty")
+	}
+	if strings.Contains(ip, " ") {
+		return fmt.Errorf("IP address cannot contain spaces")
+	}
+	// Basic format check - could be enhanced with net.ParseIP
+	parts := strings.Split(ip, ".")
+	if len(parts) != 4 {
+		return fmt.Errorf("invalid IPv4 address format")
+	}
+	return nil
 }
 
 // ValidateASN checks if a string is a valid ASN
 func (c *Client) ValidateASN(asn string) error {
-    if asn == "" {
-        return fmt.Errorf("ASN cannot be empty")
-    }
-    if !strings.HasPrefix(strings.ToUpper(asn), "AS") {
-        return fmt.Errorf("ASN must start with 'AS'")
-    }
-    return nil
+	if asn == "" {
+		return fmt.Errorf("ASN cannot be empty")
+	}
+	if !strings.HasPrefix(strings.ToUpper(asn), "AS") {
+		return fmt.Errorf("ASN must start with 'AS'")
+	}
+	return nil
 }

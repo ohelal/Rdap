@@ -31,13 +31,13 @@ type KafkaQueue struct {
 
 func NewKafkaQueue(cfg KafkaConfig) (*KafkaQueue, error) {
 	config := sarama.NewConfig()
-	
+
 	// Producer configurations
 	config.Producer.RequiredAcks = cfg.RequiredAcks
 	config.Producer.Retry.Max = cfg.RetryMax
 	config.Producer.Return.Successes = true
 	config.Producer.Timeout = cfg.Timeout
-	
+
 	// Create producer
 	producer, err := sarama.NewSyncProducer(cfg.Brokers, config)
 	if err != nil {

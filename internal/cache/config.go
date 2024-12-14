@@ -7,12 +7,12 @@ import (
 
 // CacheConfig holds cache configuration
 type CacheConfig struct {
-	LocalTTL      time.Duration
-	RedisTTL      time.Duration
-	MaxLocalSize  int64
-	EnableRedis   bool
-	RedisURL      string
-	RedisConfig   *redis.Options
+	LocalTTL     time.Duration
+	RedisTTL     time.Duration
+	MaxLocalSize int64
+	EnableRedis  bool
+	RedisURL     string
+	RedisConfig  *redis.Options
 }
 
 // ErrCacheMiss is returned when a key is not found in the cache

@@ -135,7 +135,24 @@ func appendEntityRoles(rows [][]string, entityMap map[string]interface{}) [][]st
 func appendEntityContact(rows [][]string, entityMap map[string]interface{}) [][]string {
 	if vcardArray, ok := entityMap["vcardArray"].([]interface{}); ok && len(vcardArray) > 1 {
 		if vcardFields, ok := vcardArray[1].([]interface{}); ok {
-			rows = appendVCardFields(rows, vcardFields)
+			for _, field := range vcardFields {
+				if fieldData, ok := field.([]interface{}); ok && len(fieldData) >= 3 {
+					switch fieldData[0] {
+					case "fn":
+						if name, ok := fieldData[3].(string); ok {
+							rows = append(rows, []string{"Contact Name", name})
+						}
+					case "email":
+						if email, ok := fieldData[3].(string); ok {
+							rows = append(rows, []string{"Email", email})
+						}
+					case "tel":
+						if phone, ok := fieldData[3].(string); ok {
+							rows = append(rows, []string{"Phone", phone})
+						}
+					}
+				}
+			}
 		}
 	}
 	return rows

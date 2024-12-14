@@ -15,4 +15,4 @@ func RequestTracing() fiber.Handler {
 		c.Locals("trace_id", traceID)
 		return c.Next()
 	}
-} 
+}

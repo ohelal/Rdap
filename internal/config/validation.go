@@ -15,4 +15,4 @@ func (cfg *Config) Validate() error {
 		return fmt.Errorf("rate limit must be greater than zero")
 	}
 	return nil
-} 
+}

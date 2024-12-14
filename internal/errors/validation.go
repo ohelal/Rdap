@@ -22,8 +22,8 @@ var (
 	ErrMissingRequired = func(field string) *Error {
 		return NewValidationError(field, "field is required")
 	}
-	
+
 	ErrInvalidFormat = func(field string, format string) *Error {
 		return NewValidationError(field, fmt.Sprintf("must match format: %s", format))
 	}
-) 
+)
