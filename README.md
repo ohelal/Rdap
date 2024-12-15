@@ -5,7 +5,7 @@
 [![Go Reference](https://pkg.go.dev/badge/github.com/ohelal/rdap.svg)](https://pkg.go.dev/github.com/ohelal/rdap)
 [![Go Version](https://img.shields.io/github/go-mod/go-version/ohelal/rdap)](https://go.dev/)
 [![Release](https://img.shields.io/github/v/release/ohelal/rdap)](https://github.com/ohelal/rdap/releases)
-[![Build Status](https://github.com/ohelal/rdap/workflows/build/badge.svg)](https://github.com/ohelal/rdap/actions)
+[![Build Status](https://github.com/ohelal/rdap/workflows/Build%20and%20Test/badge.svg)](https://github.com/ohelal/rdap/actions)
 [![codecov](https://codecov.io/gh/ohelal/rdap/branch/main/graph/badge.svg)](https://codecov.io/gh/ohelal/rdap)
 
 A high-performance Registration Data Access Protocol (RDAP) service implementation in Go, with support for IP addresses, ASNs, and domain lookups. The service includes caching with Redis and event streaming with Apache Kafka.
@@ -34,7 +34,7 @@ A high-performance Registration Data Access Protocol (RDAP) service implementati
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/rdap.git
+git clone https://github.com/ohelal/rdap.git
 cd rdap
 ```
 
@@ -51,6 +51,18 @@ docker-compose up -d redis kafka
 4. Build and run the service:
 ```bash
 go run ./cmd/rdap/main.go
+```
+
+### Running Tests
+
+Run all tests (including integration tests):
+```bash
+go test ./... -v
+```
+
+Run only unit tests (skips integration tests):
+```bash
+go test ./... -v -short
 ```
 
 ### Using Docker
