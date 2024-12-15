@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"errors"
 	"github.com/gofiber/fiber/v2"
 	"github.com/ohelal/rdap/internal/cache"
 	"github.com/ohelal/rdap/internal/cdn"
@@ -17,9 +18,9 @@ type CoalescedHandler struct {
 
 // NewCoalescedHandler creates a new coalesced handler
 func NewCoalescedHandler(cacheManager *cache.CacheManager, timeout time.Duration) (*CoalescedHandler, error) {
-	cdnConfig, err := cdn.NewCDNConfig("https://cdn.example.com")
-	if err != nil {
-		return nil, err
+	cdnConfig := cdn.NewCDNConfig("https://cdn.example.com", 30) // 30 seconds timeout
+	if cdnConfig == nil {
+		return nil, errors.New("failed to create cdn config")
 	}
 
 	return &CoalescedHandler{
