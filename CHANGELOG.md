@@ -8,29 +8,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.0.0] - 2024-12-15
 
 ### Added
-- Initial release of the RDAP service
-- Full RDAP protocol implementation for domains, IP addresses, and ASNs
-- Redis caching support
-- Kafka event streaming integration
+- Initial stable release of the RDAP service
+- Full RDAP protocol implementation for IP, ASN, and domain queries
+- Redis caching integration for improved performance
+- Kafka event streaming support
 - CLI tool for easy querying
 - Docker and Kubernetes support
-- Comprehensive test suite with unit and integration tests
+- Comprehensive API documentation
+- GitHub Actions workflow for CI/CD
+- Unit and integration tests with `-short` flag support
 
 ### Changed
 - Simplified GitHub Actions workflow to focus on essential checks
-- Added support for skipping integration tests in CI using -short flag
+- Improved documentation structure and content
+- Enhanced error handling and response formats
+- Updated dependencies to latest stable versions
 
 ### Fixed
-- Fixed type assertions in integration tests
-- Resolved CDN package dependencies
-- Fixed import issues in coalesced handler
+- Integration tests now handle type assertions correctly
+- CI pipeline skips integration tests with `-short` flag
+- Various code quality improvements and bug fixes
 
-## [0.1.0] - 2024-12-14
+## [0.1.0] - 2024-12-01
 
 ### Added
-- Initial project setup
-- Basic RDAP protocol implementation
-- Redis caching integration
-- Kafka event streaming setup
-- Docker support
-- GitHub Actions workflow setup
+- Initial beta release
+- Basic RDAP server implementation
+- Simple CLI tool
+- Basic documentation
