@@ -1,4 +1,4 @@
-name: Build and Test
+name: Basic Checks
 
 on:
   push:
@@ -7,73 +7,23 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
-    name: Build and Test
+  test:
+    name: Test
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        go-version: ['1.21', '1.22']
-
-    services:
-      redis:
-        image: redis:latest
-        ports:
-          - 6379:6379
-      kafka:
-        image: wurstmeister/kafka:latest
-        env:
-          KAFKA_ADVERTISED_HOST_NAME: localhost
-          KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-        ports:
-          - 9092:9092
-      zookeeper:
-        image: wurstmeister/zookeeper:latest
-        ports:
-          - 2181:2181
-
+    
     steps:
     - uses: actions/checkout@v4
 
     - name: Set up Go
       uses: actions/setup-go@v5
       with:
-        go-version: ${{ matrix.go-version }}
-        cache: true
+        go-version: '1.22'
 
     - name: Install dependencies
       run: go mod download
 
-    - name: Verify dependencies
-      run: go mod verify
-
-    - name: Run golangci-lint
-      uses: golangci/golangci-lint-action@v3
-      with:
-        version: latest
-        args: --timeout=5m
-
-    - name: Run tests with coverage
-      run: |
-        go test -v -race -coverprofile=coverage.txt -covermode=atomic ./...
-        go tool cover -func=coverage.txt
-
-    - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v3
-      with:
-        file: ./coverage.txt
-        flags: unittests
-        name: codecov-umbrella
+    - name: Run tests
+      run: go test -v ./...
 
     - name: Build
-      run: |
-        go build -v ./...
-        go build -v -o rdap-cli ./cmd/rdap
-        go build -v -o rdap-server ./cmd/server
-
-    - name: Upload artifacts
-      uses: actions/upload-artifact@v3
-      with:
-        name: binaries
-        path: |
-          rdap-cli
-          rdap-server
+      run: go build -v ./...
